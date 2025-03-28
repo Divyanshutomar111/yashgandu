@@ -4,7 +4,7 @@ import math
 def calculator():
     """
     A Streamlit app for a comprehensive calculator with various functionalities,
-    enhanced with styling for a more visually appealing experience.
+    enhanced with a pink to purple gradient and other styling for a visually appealing experience.
     """
 
     # --- App Styling ---
@@ -12,15 +12,17 @@ def calculator():
         """
         <style>
         .reportview-container {
-            background: linear-gradient(135deg, #e0f2f1, #fce4ec); /* Light Pastel Gradient */
+            background: linear-gradient(135deg, #e91e63, #673ab7); /* Pink to Purple Gradient */
+            color: white; /* Set default text color to white for better contrast */
         }
-       .main .block-container {
+
+        .main .block-container {
           max-width: 800px;
         }
 
         .stButton>button {
             color: #fff;
-            background-color: #4CAF50; /* Green */
+            background-color: #d81b60; /* Darker Pink */
             border: none;
             padding: 10px 20px;
             text-align: center;
@@ -30,30 +32,35 @@ def calculator():
             margin: 4px 2px;
             cursor: pointer;
             border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+        }
+
+        .stButton>button:hover {
+            background-color: #c2185b;  /* Slightly darker pink on hover */
         }
 
         .stSelectbox>label, .stNumberInput>label {
-            color: #336699; /* Dark Blue */
+            color: #f8bbd0; /* Light Pink */
             font-weight: bold;
         }
 
         .stSuccess {
-            color: #2E7D32; /* Dark Green for Success Messages */
-            background-color: #C8E6C9; /* Light Green Background */
+            color: #e91e63; /* Pink */
+            background-color: #fce4ec; /* Very Light Pink Background */
             padding: 10px;
             border-radius: 5px;
         }
 
         .stError {
-            color: #D32F2F; /* Dark Red for Error Messages */
-            background-color: #FFCDD2; /* Light Red Background */
+            color: #673ab7; /* Purple */
+            background-color: #ede7f6; /* Very Light Purple Background */
             padding: 10px;
             border-radius: 5px;
         }
 
         /* Adjust slider and input appearance */
         .stSlider>div>div>div>div {
-            background-color: #29B6F6; /* Light Blue */
+            background-color: #ba68c8; /* Lavender */
         }
 
         div.stNumberInput > label {
@@ -62,7 +69,7 @@ def calculator():
 
         /* Make titles look nicer */
         h1, h2, h3, h4, h5, h6 {
-            color: #2196F3; /* Blue */
+            color: #ce93d8; /* Light Purple */
             font-family: sans-serif;
         }
 
@@ -77,8 +84,8 @@ def calculator():
     )
 
     # --- App Content ---
-    st.title("🎨 Comprehensive Calculator")  # Added an emoji
-    st.markdown("A versatile calculator with enhanced styling and functionalities.")
+    st.title("🌸 Comprehensive Calculator")  # Added an emoji
+    st.markdown("A versatile calculator with a stylish pink-purple theme.")
 
     # Input Section
     st.header("⚙️ Inputs") # Added an emoji
@@ -265,7 +272,6 @@ def calculator():
             if st.button("Calculate Volume"):
                 result = math.pi * radius**2 * height
                 st.success(f"✅ Volume: {result}") # Added an emoji
-
 
 if __name__ == "__main__":
     calculator()
