@@ -1,23 +1,33 @@
 import streamlit as st
 import math
+import numpy as np  # For complex number support
 
 def calculator():
     """
-    A Streamlit app for a comprehensive calculator with various functionalities.
-    Includes examples and clear explanations for each calculation type.
+    A Streamlit app for a comprehensive calculator with enhanced UI, complex number support,
+    detailed examples, and optimized code.
     """
 
     # --- App Styling ---
     st.markdown(
         """
         <style>
-        .reportview-container {
+        body {
             background: linear-gradient(135deg, #e91e63, #673ab7); /* Pink to Purple Gradient */
             color: white; /* Set default text color to white for better contrast */
         }
-
-        .main .block-container {
-          max-width: 800px;
+        .reportview-container {
+            background: transparent; /* Make the container transparent */
+        }
+        .main {
+            background: transparent; /* Make the main area transparent */
+            max-width: 800px; /* Limit width */
+            margin: 0 auto; /* Center the app */
+        }
+        .block-container {
+          background-color: rgba(255, 255, 255, 0.1); /* Add a semi-transparent white container */
+          padding: 20px;
+          border-radius: 10px;
         }
 
         .stButton>button {
@@ -73,19 +83,14 @@ def calculator():
             font-family: sans-serif;
         }
 
-        div.block-container {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-
         </style>
         """,
         unsafe_allow_html=True,
     )
 
     # --- App Content ---
-    st.title("🌸 Comprehensive Calculator")
-    st.markdown("A versatile calculator with a stylish pink-purple theme. Examples provided!")
+    st.title("⚛️ Comprehensive Calculator")
+    st.markdown("A versatile calculator with a stylish theme, complex number support, and detailed examples.")
 
     # Input Section
     st.header("⚙️ Inputs")
@@ -95,6 +100,7 @@ def calculator():
         [
             "Basic Arithmetic",
             "Scientific Calculations",
+            "Complex Number Operations",
             "Unit Conversions",
             "Area Calculations",
             "Volume Calculations",
@@ -104,90 +110,142 @@ def calculator():
     # 1. Basic Arithmetic
     if calculation_type == "Basic Arithmetic":
         st.subheader("➕ Basic Arithmetic")
-        st.write(
-            "Perform basic calculations like addition, subtraction, multiplication, and division."
-        )
-        st.write("Example:  Adding 5 and 3 results in 8.")
-
-        num1 = st.number_input("Enter Number 1", value=0.0)
-        num2 = st.number_input("Enter Number 2", value=0.0)
+        st.write("Perform basic calculations. Supports real and complex numbers.")
+        num1 = st.text_input("Enter Number 1 (e.g., 2+3j or 2)", value="0")
+        num2 = st.text_input("Enter Number 2 (e.g., 4-1j or 4)", value="0")
         operation = st.selectbox(
             "Select Operation:", ["Addition", "Subtraction", "Multiplication", "Division"]
         )
 
-        if st.button("Calculate"):
-            if operation == "Addition":
-                result = num1 + num2
-            elif operation == "Subtraction":
-                result = num1 - num2
-            elif operation == "Multiplication":
-                result = num1 * num2
-            elif operation == "Division":
-                if num2 == 0:
-                    result = "Error: Division by zero!"
+        try:
+            num1 = complex(num1)
+            num2 = complex(num2)
+            if st.button("Calculate"):
+                if operation == "Addition":
+                    result = num1 + num2
+                    example = f"Example: ({num1}) + ({num2}) = {result}"
+                elif operation == "Subtraction":
+                    result = num1 - num2
+                    example = f"Example: ({num1}) - ({num2}) = {result}"
+                elif operation == "Multiplication":
+                    result = num1 * num2
+                    example = f"Example: ({num1}) * ({num2}) = {result}"
+                elif operation == "Division":
+                    if num2 == 0:
+                        result = "Error: Division by zero!"
+                        example = None
+                    else:
+                        result = num1 / num2
+                        example = f"Example: ({num1}) / ({num2}) = {result}"
+
+                if example:
+                    st.success(f"✅ Result: {result}")
+                    st.info(example)
                 else:
-                    result = num1 / num2
-            st.success(f"✅ Result: {result}")
+                    st.error(result)
+
+        except ValueError:
+            st.error("Invalid input. Please enter numbers (real or complex).")
 
     # 2. Scientific Calculations
     elif calculation_type == "Scientific Calculations":
         st.subheader("🔬 Scientific Calculations")
-        st.write(
-            "Calculate square roots, exponents, logarithms, and trigonometric functions (sine, cosine, tangent)."
-        )
-        st.write(
-            "Example: The square root of 9 is 3.  The sine of 30 degrees is approximately 0.5."
-        )
-
-        scientific_operation = st.selectbox(
-            "Select Scientific Operation:",
+        st.write("Calculate advanced functions. Supports real numbers.")
+        operation = st.selectbox(
+            "Select Operation:",
             ["Square Root", "Exponentiation", "Logarithm", "Sine", "Cosine", "Tangent"],
         )
         num = st.number_input("Enter Number", value=1.0)
 
         if st.button("Calculate"):
             try:
-                if scientific_operation == "Square Root":
-                    result = math.sqrt(num)
-                    st.write(f"Explanation: The square root of {num} is a number that, when multiplied by itself, equals {num}.")
-                elif scientific_operation == "Exponentiation":
+                if operation == "Square Root":
+                    if num < 0:
+                        result = "Error: Cannot calculate square root of a negative real number."
+                        example = None
+                    else:
+                        result = math.sqrt(num)
+                        example = f"Example: √({num}) = {result}"
+                elif operation == "Exponentiation":
                     exponent = st.number_input("Enter Exponent", value=2.0)
                     result = num ** exponent
-                    st.write(f"Explanation: {num} raised to the power of {exponent} is {num} multiplied by itself {exponent} times.")
-                elif scientific_operation == "Logarithm":
+                    example = f"Example: {num}^{exponent} = {result}"
+                elif operation == "Logarithm":
                     base = st.number_input("Enter Logarithm Base (default 10)", value=10.0)
                     if num <= 0:
                         result = "Error: Number must be positive for logarithm"
+                        example = None
                     else:
                         result = math.log(num, base)
-                        st.write(f"Explanation: The logarithm (base {base}) of {num} is the exponent to which {base} must be raised to equal {num}.")
-                elif scientific_operation == "Sine":
-                    result = math.sin(math.radians(num))  # Convert to radians
-                    st.write(f"Explanation: Sine is a trigonometric function that relates an angle of a right triangle to the ratio of the length of the opposite side to the length of the hypotenuse.")
-                elif scientific_operation == "Cosine":
-                    result = math.cos(math.radians(num))  # Convert to radians
-                    st.write(f"Explanation: Cosine is a trigonometric function that relates an angle of a right triangle to the ratio of the length of the adjacent side to the length of the hypotenuse.")
-                elif scientific_operation == "Tangent":
-                    result = math.tan(math.radians(num))  # Convert to radians
-                    st.write(f"Explanation: Tangent is a trigonometric function that relates an angle of a right triangle to the ratio of the length of the opposite side to the length of the adjacent side.")
+                        example = f"Example: log{base}({num}) = {result}"
+                elif operation == "Sine":
+                    result = math.sin(math.radians(num))
+                    example = f"Example: sin({num} degrees) = {result}"
+                elif operation == "Cosine":
+                    result = math.cos(math.radians(num))
+                    example = f"Example: cos({num} degrees) = {result}"
+                elif operation == "Tangent":
+                    result = math.tan(math.radians(num))
+                    example = f"Example: tan({num} degrees) = {result}"
+
+                if example:
+                    st.success(f"✅ Result: {result}")
+                    st.info(example)
+                else:
+                    st.error(result)
+
+            except ValueError as e:
+                st.error(f"Error: {e}")
+
+    # 3. Complex Number Operations
+    elif calculation_type == "Complex Number Operations":
+        st.subheader("🧮 Complex Number Operations")
+        st.write("Perform advanced operations on complex numbers.")
+
+        complex_op = st.selectbox(
+            "Select Operation:",
+            ["Absolute Value", "Conjugate", "Real Part", "Imaginary Part", "Angle (Phase)"]
+        )
+        num_str = st.text_input("Enter Complex Number (e.g., 3+4j)", value="0")
+
+        try:
+            num = complex(num_str)
+            if st.button("Calculate Complex"):
+                if complex_op == "Absolute Value":
+                    result = abs(num)
+                    example = f"Example: |{num}| = {result}"
+                elif complex_op == "Conjugate":
+                    result = num.conjugate()
+                    example = f"Example: Conjugate of {num} is {result}"
+                elif complex_op == "Real Part":
+                    result = num.real
+                    example = f"Example: Real part of {num} is {result}"
+                elif complex_op == "Imaginary Part":
+                    result = num.imag
+                    example = f"Example: Imaginary part of {num} is {result}"
+                elif complex_op == "Angle (Phase)":
+                    result = np.angle(num)  # Returns angle in radians
+                    result_degrees = np.degrees(result)  # Convert to degrees
+                    example = f"Example: Angle of {num} is {result_degrees} degrees"
+                    result = result_degrees  # Display in degrees
+
                 st.success(f"✅ Result: {result}")
+                st.info(example)
 
-            except Exception as e:
-                st.error(f"❌ Error: {e}")
+        except ValueError:
+            st.error("Invalid complex number format.  Use 'a+bj' or 'a-bj'.")
 
-    # 3. Unit Conversions
+    # 4. Unit Conversions
     elif calculation_type == "Unit Conversions":
         st.subheader("📏 Unit Conversions")
-        st.write("Convert between different units of measurement, like temperature, length, weight, and currency.")
-        st.write("Example: Converting 25 degrees Celsius to Fahrenheit results in 77 degrees Fahrenheit.")
+        st.write("Convert between units of measurement.")
 
         conversion_type = st.selectbox(
-            "Select Conversion Type:", ["Temperature", "Length", "Weight", "Currency"]
+            "Select Conversion Type:", ["Temperature", "Length"]  # Removed Currency for simplicity
         )
 
         # Temperature Conversion
         if conversion_type == "Temperature":
-            st.write("Convert between Celsius, Fahrenheit, and Kelvin.")
             temp_value = st.number_input("Enter Temperature Value", value=0.0)
             from_unit = st.selectbox("From Unit:", ["Celsius", "Fahrenheit", "Kelvin"])
             to_unit = st.selectbox("To Unit:", ["Celsius", "Fahrenheit", "Kelvin"])
@@ -195,63 +253,57 @@ def calculator():
             if st.button("Convert"):
                 if from_unit == to_unit:
                     result = temp_value
+                    example = f"{temp_value} {from_unit} is the same as {temp_value} {to_unit}."
                 elif from_unit == "Celsius" and to_unit == "Fahrenheit":
                     result = (temp_value * 9 / 5) + 32
+                    example = f"Example: ({temp_value}°C * 9/5) + 32 = {result}°F"
                 elif from_unit == "Celsius" and to_unit == "Kelvin":
                     result = temp_value + 273.15
+                    example = f"Example: {temp_value}°C + 273.15 = {result}K"
                 elif from_unit == "Fahrenheit" and to_unit == "Celsius":
                     result = (temp_value - 32) * 5 / 9
+                    example = f"Example: ({temp_value}°F - 32) * 5/9 = {result}°C"
                 elif from_unit == "Fahrenheit" and to_unit == "Kelvin":
                     result = (temp_value - 32) * 5 / 9 + 273.15
+                    example = f"Example: (({temp_value}°F - 32) * 5/9) + 273.15 = {result}K"
                 elif from_unit == "Kelvin" and to_unit == "Celsius":
                     result = temp_value - 273.15
+                    example = f"Example: {temp_value}K - 273.15 = {result}°C"
                 elif from_unit == "Kelvin" and to_unit == "Fahrenheit":
                     result = (temp_value - 273.15) * 9 / 5 + 32
-                st.success(f"✅ Result: {result} {to_unit}")
+                    example = f"Example: (({temp_value}K - 273.15) * 9/5) + 32 = {result}°F"
 
-        # Length Conversion (Example)
+                st.success(f"✅ Result: {result} {to_unit}")
+                st.info(example)
+
+        # Length Conversion
         elif conversion_type == "Length":
-            st.write("Convert between Meters, Feet, Inches and Kilometers.")
             length_value = st.number_input("Enter Length Value", value=0.0)
             from_unit = st.selectbox("From Unit:", ["Meters", "Feet", "Inches", "Kilometers"])
             to_unit = st.selectbox("To Unit:", ["Meters", "Feet", "Inches", "Kilometers"])
 
             if st.button("Convert Length"):
+                conversion_factors = {
+                    "Meters": {"Feet": 3.28084, "Inches": 39.3701, "Kilometers": 0.001},
+                    "Feet": {"Meters": 0.3048, "Inches": 12, "Kilometers": 0.0003048},
+                    "Inches": {"Meters": 0.0254, "Feet": 0.0833333, "Kilometers": 2.54e-5},
+                    "Kilometers": {"Meters": 1000, "Feet": 3280.84, "Inches": 39370.1}
+                }
+
                 if from_unit == to_unit:
                     result = length_value
-                elif from_unit == "Meters" and to_unit == "Feet":
-                    result = length_value * 3.28084
-                elif from_unit == "Meters" and to_unit == "Inches":
-                    result = length_value * 39.3701
-                elif from_unit == "Meters" and to_unit == "Kilometers":
-                    result = length_value / 1000
-                elif from_unit == "Feet" and to_unit == "Meters":
-                    result = length_value / 3.28084
-                elif from_unit == "Feet" and to_unit == "Inches":
-                    result = length_value * 12
-                elif from_unit == "Feet" and to_unit == "Kilometers":
-                    result = length_value / 3280.84
-                elif from_unit == "Inches" and to_unit == "Meters":
-                    result = length_value / 39.3701
-                elif from_unit == "Inches" and to_unit == "Feet":
-                    result = length_value / 12
-                elif from_unit == "Inches" and to_unit == "Kilometers":
-                    result = length_value / 39370.1
-                elif from_unit == "Kilometers" and to_unit == "Meters":
-                    result = length_value * 1000
-                elif from_unit == "Kilometers" and to_unit == "Feet":
-                    result = length_value * 3280.84
-                elif from_unit == "Kilometers" and to_unit == "Inches":
-                    result = length_value * 39370.1
+                    example = f"{length_value} {from_unit} is the same as {length_value} {to_unit}."
+                else:
+                    result = length_value * conversion_factors[from_unit][to_unit]
+                    example = f"Example: {length_value} {from_unit} * {conversion_factors[from_unit][to_unit]} = {result} {to_unit}"
+
                 st.success(f"✅ Result: {result} {to_unit}")
+                st.info(example)
 
-        # You can add similar blocks for Weight and Currency conversions
-
-    # 4. Area Calculations
+    # 5. Area Calculations
     elif calculation_type == "Area Calculations":
         st.subheader("📐 Area Calculations")
-        st.write("Calculate the area of different shapes, such as circles, rectangles, and triangles.")
-        st.write("Example:  A rectangle with a length of 5 and a width of 4 has an area of 20.")
+        st.write("Calculate areas of geometric shapes.")
 
         shape = st.selectbox(
             "Select Shape:", ["Circle", "Rectangle", "Triangle"]
@@ -259,32 +311,34 @@ def calculator():
 
         if shape == "Circle":
             radius = st.number_input("Enter Radius", value=1.0)
-            st.write("Explanation: The area of a circle is calculated using the formula π * radius^2")
-
             if st.button("Calculate Area"):
                 result = math.pi * radius**2
+                example = f"Area = π * ({radius})^2 = {result}"
                 st.success(f"✅ Area: {result}")
+                st.info(example)
+
         elif shape == "Rectangle":
             length = st.number_input("Enter Length", value=1.0)
             width = st.number_input("Enter Width", value=1.0)
-            st.write("Explanation: The area of a rectangle is calculated by multiplying its length and width.")
             if st.button("Calculate Area"):
                 result = length * width
+                example = f"Area = {length} * {width} = {result}"
                 st.success(f"✅ Area: {result}")
+                st.info(example)
+
         elif shape == "Triangle":
             base = st.number_input("Enter Base", value=1.0)
             height = st.number_input("Enter Height", value=1.0)
-            st.write("Explanation: The area of a triangle is calculated as 0.5 * base * height.")
-
             if st.button("Calculate Area"):
                 result = 0.5 * base * height
+                example = f"Area = 0.5 * {base} * {height} = {result}"
                 st.success(f"✅ Area: {result}")
+                st.info(example)
 
-    # 5. Volume Calculations
+    # 6. Volume Calculations
     elif calculation_type == "Volume Calculations":
         st.subheader("📦 Volume Calculations")
-        st.write("Calculate the volume of different 3D shapes like cubes, spheres, and cylinders.")
-        st.write("Example: A cube with a side length of 2 has a volume of 8.")
+        st.write("Calculate volumes of geometric shapes.")
 
         shape = st.selectbox(
             "Select Shape:", ["Cube", "Sphere", "Cylinder"]
@@ -292,26 +346,29 @@ def calculator():
 
         if shape == "Cube":
             side = st.number_input("Enter Side Length", value=1.0)
-            st.write("Explanation: The volume of a cube is calculated by cubing the side length (side * side * side).")
-
             if st.button("Calculate Volume"):
                 result = side**3
+                example = f"Volume = {side}^3 = {result}"
                 st.success(f"✅ Volume: {result}")
+                st.info(example)
+
         elif shape == "Sphere":
             radius = st.number_input("Enter Radius", value=1.0)
-            st.write("Explanation: The volume of a sphere is calculated using the formula (4/3) * π * radius^3.")
-
             if st.button("Calculate Volume"):
                 result = (4/3) * math.pi * radius**3
+                example = f"Volume = (4/3) * π * ({radius})^3 = {result}"
                 st.success(f"✅ Volume: {result}")
+                st.info(example)
+
         elif shape == "Cylinder":
             radius = st.number_input("Enter Radius", value=1.0)
             height = st.number_input("Enter Height", value=1.0)
-            st.write("Explanation: The volume of a cylinder is calculated using the formula π * radius^2 * height.")
-
             if st.button("Calculate Volume"):
                 result = math.pi * radius**2 * height
+                example = f"Volume = π * ({radius})^2 * {height} = {result}"
                 st.success(f"✅ Volume: {result}")
+                st.info(example)
+
 
 if __name__ == "__main__":
     calculator()
