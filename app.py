@@ -5,48 +5,50 @@ import random
 
 def calculator():
     """
-    A Streamlit app with enhanced UI, integer-only input, engaging examples, and background images.
+    A Streamlit app with a Pokémon background image and engaging examples.
     """
 
     # --- Helper Functions (Same as Before) ---
     def generate_addition_example(num1, num2, result):
-        items = ["apples", "bananas", "candies", "books", "toys", "marbles"]
+        items = ["Poké Balls", "Potions", "Berries", "Badges", "Rare Candies"]
         item = random.choice(items)
-        verbs = ["gave", "found", "received", "picked up"]
+        verbs = ["caught", "found", "received", "picked up"]
         verb = random.choice(verbs)
 
         return f"You had {num1} {item} and {verb} {num2} more. Now you have {result} {item}."
 
     def generate_subtraction_example(num1, num2, result):
-        items = ["cookies", "balloons", "pencils", "stickers", "flowers", "chocolates"]
+        items = ["Pokémon cards", "Trainer Tips", "Evolution Stones", "Super Potions"]
         item = random.choice(items)
-        verbs = ["ate", "lost", "gave away", "broke", "sold"]
+        verbs = ["lost", "traded", "gave away", "used", "sold"]
         verb = random.choice(verbs)
 
         return f"You started with {num1} {item} and {verb} {num2} of them.  You now have {result} {item} left."
 
     def generate_multiplication_example(num1, num2, result):
-        groups = ["boxes", "bags", "stacks", "rows", "sets", "piles"]
+        groups = ["packs", "boxes", "sets", "decks"]
         group = random.choice(groups)
-        items = ["cards", "beads", "coins", "pebbles", "buttons"]
+        items = ["trainer cards", "energy cards", "Pokémon figurines"]
         item = random.choice(items)
 
         return f"You have {num1} {group} of {item}, and each {group} contains {num2} {item}.  So you have a total of {result} {item}."
 
     def generate_division_example(num1, num2, result):
-        items = ["slices of pizza", "cupcakes", "portions of food", "paper clips", "rubber bands"]
+        items = ["rare candies", "TMs", "evolution stones", "berries"]
         item = random.choice(items)
-        people = ["friends", "colleagues", "classmates", "family members"]
+        people = ["team members", "gym trainers", "fellow trainers", "friends"]
         person = random.choice(people)
 
         return f"You have {num1} {item} to share equally among {num2} {person}. Each person gets {result} {item}."
 
     # --- App Styling ---
+    pokemon_image_url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" #Example Pokemon Pikachu Image
+
     st.markdown(
         f"""
         <style>
         body {{
-            background-image: url("https://example.com/your_background_image.jpg"); /* Replace with your image URL */
+            background-image: url("{pokemon_image_url}"); /* Replace with your Pokémon image URL */
             background-size: cover; /* Cover the entire background */
             background-repeat: no-repeat; /* Prevent image from repeating */
             background-attachment: fixed; /* Keep the background fixed during scrolling */
@@ -132,8 +134,8 @@ def calculator():
     )
 
     # --- App Content ---
-    st.title("🔢 Math Explorer")
-    st.markdown("A fun calculator with stories! Enter whole numbers only.")
+    st.title("🔢 Math Explorer: Gotta Calculate 'Em All!")
+    st.markdown("A fun calculator with Pokémon! Enter whole numbers only.")
 
     # Input Section
     st.header("🎮 Let's Calculate!")
@@ -148,7 +150,7 @@ def calculator():
     # 1. Basic Arithmetic
     if calculation_type == "Basic Arithmetic":
         st.subheader("🍎 Basic Arithmetic Adventures")
-        st.write("Add, subtract, multiply, or divide whole numbers. Let's make it a story!")
+        st.write("Add, subtract, multiply, or divide whole numbers. Let's make it a Pokémon training session!")
 
         with st.container(): # Using container to create a "card" effect
             st.markdown("<div class='card'>", unsafe_allow_html=True)
