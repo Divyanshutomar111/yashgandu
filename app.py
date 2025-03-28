@@ -1,205 +1,74 @@
 import streamlit as st
-import math
-import numpy as np
-import random
+import time
+import datetime
 
 def calculator():
-    """
-    A Streamlit app with a Pokémon background image and engaging examples.
-    """
+    """A Streamlit calculator app with an alarm clock feature."""
 
-    # --- Helper Functions (Same as Before) ---
-    def generate_addition_example(num1, num2, result):
-        items = ["Poké Balls", "Potions", "Berries", "Badges", "Rare Candies"]
-        item = random.choice(items)
-        verbs = ["caught", "found", "received", "picked up"]
-        verb = random.choice(verbs)
-
-        return f"You had {num1} {item} and {verb} {num2} more. Now you have {result} {item}."
-
-    def generate_subtraction_example(num1, num2, result):
-        items = ["Pokémon cards", "Trainer Tips", "Evolution Stones", "Super Potions"]
-        item = random.choice(items)
-        verbs = ["lost", "traded", "gave away", "used", "sold"]
-        verb = random.choice(verbs)
-
-        return f"You started with {num1} {item} and {verb} {num2} of them.  You now have {result} {item} left."
-
-    def generate_multiplication_example(num1, num2, result):
-        groups = ["packs", "boxes", "sets", "decks"]
-        group = random.choice(groups)
-        items = ["trainer cards", "energy cards", "Pokémon figurines"]
-        item = random.choice(items)
-
-        return f"You have {num1} {group} of {item}, and each {group} contains {num2} {item}.  So you have a total of {result} {item}."
-
-    def generate_division_example(num1, num2, result):
-        items = ["rare candies", "TMs", "evolution stones", "berries"]
-        item = random.choice(items)
-        people = ["team members", "gym trainers", "fellow trainers", "friends"]
-        person = random.choice(people)
-
-        return f"You have {num1} {item} to share equally among {num2} {person}. Each person gets {result} {item}."
-
-    # --- App Styling ---
-    pokemon_image_url = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" #Example Pokemon Pikachu Image
-
+    # --- Styling (Adapt to your existing style) ---
     st.markdown(
-        f"""
+        """
         <style>
-        body {{
-            background-image: url("{pokemon_image_url}"); /* Replace with your Pokémon image URL */
-            background-size: cover; /* Cover the entire background */
-            background-repeat: no-repeat; /* Prevent image from repeating */
-            background-attachment: fixed; /* Keep the background fixed during scrolling */
-            color: white; /* Set default text color to white for better contrast */
-        }}
-        .reportview-container {{
-            background: transparent; /* Make the container transparent */
-        }}
-        .main {{
-            background: transparent; /* Make the main area transparent */
-            max-width: 800px; /* Limit width */
-            margin: 0 auto; /* Center the app */
-        }}
-        .block-container {{
-          background-color: rgba(255, 255, 255, 0.1); /* Add a semi-transparent white container */
-          padding: 20px;
-          border-radius: 10px;
-        }}
-
-        .stButton>button {{
-            color: #fff;
-            background-color: #d81b60; /* Darker Pink */
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-        }}
-
-        .stButton>button:hover {{
-            background-color: #c2185b;  /* Slightly darker pink on hover */
-        }}
-
-        .stSelectbox>label, .stNumberInput>label {{
-            color: #f8bbd0; /* Light Pink */
-            font-weight: bold;
-        }}
-
-        .stSuccess {{
-            color: #e91e63; /* Pink */
-            background-color: #fce4ec; /* Very Light Pink Background */
-            padding: 10px;
-            border-radius: 5px;
-        }}
-
-        .stError {{
-            color: #673ab7; /* Purple */
-            background-color: #ede7f6; /* Very Light Purple Background */
-            padding: 10px;
-            border-radius: 5px;
-        }}
-
-        /* Adjust slider and input appearance */
-        .stSlider>div>div>div>div {{
-            background-color: #ba68c8; /* Lavender */
-        }}
-
-        div.stNumberInput > label {{
-            font-size: 18px;
-        }}
-
-        /* Make titles look nicer */
-        h1, h2, h3, h4, h5, h6 {{
-            color: #ce93d8; /* Light Purple */
-            font-family: sans-serif;
-        }}
-
-        /* Card Styling */
-        .card {{
-            background-color: rgba(255, 255, 255, 0.05);
+        /* Add any custom styles here to match your calculator's theme */
+        .alarm-panel {
+            background-color: rgba(255, 255, 255, 0.05); /* Semi-transparent white */
             border-radius: 10px;
             padding: 15px;
             margin-bottom: 10px;
-        }}
+            color: white; /* Adjust text color for readability */
+        }
+        .alarm-set {
+            color: #4CAF50; /* Green for "Alarm Set" message */
+        }
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    # --- App Content ---
-    st.title("🔢 Math Explorer: Gotta Calculate 'Em All!")
-    st.markdown("A fun calculator with Pokémon! Enter whole numbers only.")
+    # --- Core Calculator Content ---
+    st.title("⏰ Multi-Tool: Calculator & Alarm")
+    st.markdown("A handy calculator with a built-in alarm clock.")
 
-    # Input Section
-    st.header("🎮 Let's Calculate!")
+    # --- ALARM CLOCK SECTION ---
+    st.header("⏰ Set an Alarm")
 
-    calculation_type = st.selectbox(
-        "Choose your adventure:",
-        [
-            "Basic Arithmetic",
-        ],
-    )
+    with st.container():
+        st.markdown("<div class='alarm-panel'>", unsafe_allow_html=True)  # Start Alarm Panel
+        alarm_time = st.time_input("Set Alarm Time")
+        st.markdown("</div>", unsafe_allow_html=True)  # End Alarm Panel
 
-    # 1. Basic Arithmetic
-    if calculation_type == "Basic Arithmetic":
-        st.subheader("🍎 Basic Arithmetic Adventures")
-        st.write("Add, subtract, multiply, or divide whole numbers. Let's make it a Pokémon training session!")
+    if st.button("Set Alarm"):
+        alarm_set = True
+        st.session_state.alarm_set = True  # Store alarm status in session state
+        st.success("<span class='alarm-set'>Alarm Set!</span>", unsafe_allow_html=True)  # Use styled message
+        st.session_state.alarm_time = alarm_time  # Store alarm time in session state
+    else:
+        alarm_set = False # If alarm has not been set
+        if 'alarm_set' not in st.session_state:
+            st.session_state.alarm_set = False # Initialize alarm to false
 
-        with st.container(): # Using container to create a "card" effect
-            st.markdown("<div class='card'>", unsafe_allow_html=True)
-            num1 = st.number_input("Enter First Number (Whole Number)", value=0, step=1) #step=1 ensures whole numbers
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        with st.container(): # Using container to create a "card" effect
-            st.markdown("<div class='card'>", unsafe_allow_html=True)
-            num2 = st.number_input("Enter Second Number (Whole Number)", value=0, step=1)
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        operation = st.selectbox(
-            "Select Operation:", ["Addition", "Subtraction", "Multiplication", "Division"]
-        )
-
-        if st.button("Do the Math!"):
-            if operation == "Addition":
-                result = num1 + num2
-                example = generate_addition_example(num1, num2, result)
-            elif operation == "Subtraction":
-                result = num1 - num2
-                example = generate_subtraction_example(num1, num2, result)
-            elif operation == "Multiplication":
-                result = num1 * num2
-                example = generate_multiplication_example(num1, num2, result)
-            elif operation == "Division":
-                if num2 == 0:
-                    result = "Error: Division by zero!"
-                    example = None
-                else:
-                    result = num1 // num2 #Integer Division
-                    remainder = num1 % num2
-
-                    if remainder != 0:
-                        example = generate_division_example(num1, num2, result) + f" (with {remainder} left over)."
-                    else:
-                        example = generate_division_example(num1, num2, result)
-
-                    result = f"{result}" #Displaying integer quotient
-
-
-
-            if example:
-                st.success(f"🎉 Result: {result}")
-                st.info(example)
+    # --- Background Alarm Check (using Session State) ---
+    if st.session_state.alarm_set: # Only start checking if alarm is set
+        now = datetime.datetime.now().time()
+        if now.hour == st.session_state.alarm_time.hour and now.minute == st.session_state.alarm_time.minute and now.second <= 5:  # Check within 5-second window
+            st.balloons()
+            st.warning("WAKE UP!")
+            st.session_state.alarm_set = False  # Reset alarm after triggering
+        else:
+            time_to_alarm = datetime.datetime.combine(datetime.date.today(), st.session_state.alarm_time) - datetime.datetime.now()
+            minutes = divmod(time_to_alarm.total_seconds(), 60)[0]
+            if minutes > 0:
+                st.info(f"Alarm will ring in {minutes:.0f} minutes") #Show the minutes left
             else:
-                st.error(result)
-                st.stop()
+                st.info("Alarm is set for today")
 
+
+
+    # --- (Rest of your calculator code here) ---
+    # Place the calculator functionality below the alarm clock section
+
+    st.header("Calculator Section")  # To visually separate
+    # You can now include other calculation types, as before
 
 if __name__ == "__main__":
     calculator()
